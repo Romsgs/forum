@@ -21,7 +21,7 @@ export class TopicController {
 
   @Post()
   async createTopic(@Body() data: Prisma.TopicCreateInput): Promise<Topic> {
-    // to make the request on insomina:
+    // to make the request on insomina, "owner" field mus be a object with "connect" object with owners id:
     //JSON
     // {
     //   "title": "Topic 3",
