@@ -6,10 +6,11 @@ import {
   Body,
   Put,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { TopicService } from './topic.service';
 import { Topic, Prisma } from '@prisma/client';
-
+import { AUTHGuard } from 'src/auth/auth.guard';
 // interface iBodyCreateTopic {
 //   title: string;
 //   owner?: Prisma.UserCreateNestedOneWithoutTopicsInput;
@@ -20,6 +21,7 @@ export class TopicController {
   constructor(private topicService: TopicService) {}
 
   @Post()
+  @UseGuards(AUTHGuard)
   async createTopic(@Body() data: Prisma.TopicCreateInput): Promise<Topic> {
     // to make the request on insomina, "owner" field mus be a object with "connect" object with owners id:
     //JSON
@@ -54,6 +56,7 @@ export class TopicController {
   }
 
   @Delete(':id')
+  @UseGuards(AUTHGuard)
   async deleteTopic(@Param('id') id: string): Promise<Topic> {
     return this.topicService.deleteTopic(id);
   }

@@ -36,9 +36,13 @@ export class TopicRepository {
   }
   async findTopicByOwner(owner: string): Promise<Topic[]> {
     try {
-      return await this.prisma.topic.findMany({ where: { authorId: owner } });
+      const topicsWithPosts = await this.prisma.topic.findMany({
+        where: { authorId: owner },
+        include: { posts: true }, // Include related posts in the query
+      });
+      return topicsWithPosts;
     } catch (error) {
-      throw new Error(`Could not find topic by Owner: ${error.message}`);
+      throw new Error(`Could not find topics by Owner: ${error.message}`);
     }
   }
 

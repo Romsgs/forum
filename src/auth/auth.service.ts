@@ -2,19 +2,18 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { JwtService } from './jwt.service';
 import { UserRepository } from 'src/user/user.repository';
-import { PasswordHash } from '../utils/passwordHash';
+import { verify } from 'argon2';
 @Injectable()
 export class AuthService {
   constructor(
     private jwtService: JwtService,
     private userRepository: UserRepository,
-    private passwordHash: PasswordHash,
   ) {}
 
   async login(email: string, password: string) {
     // Validate the user's credentials
+    console.log('authService.login >> ', email, password);
     const user = await this.validateUser(email, password);
-
     const payload = { sub: user.id, email: user.email };
     const token = this.jwtService.sign(payload);
     return { access_token: token };
@@ -23,13 +22,9 @@ export class AuthService {
   // Implement user validation logic
   private async validateUser(email: string, password: string) {
     try {
-      const passwordToCompare = await this.passwordHash.hash(password);
-      const user = await this.userRepository.testPasswordAndEmail(
-        email,
-        passwordToCompare,
-      );
-
-      if (user) {
+      const user = await this.userRepository.findUserByEmail(email);
+      const passwordIsTrue = await verify(user.password, password);
+      if (passwordIsTrue) {
         return user;
       } else {
         throw new HttpException(

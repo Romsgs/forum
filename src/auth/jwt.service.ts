@@ -11,7 +11,8 @@ export class JwtService {
 
   verify(token: string): any {
     try {
-      return jwt.verify(token, this.secretKey);
+      const jwtDecoded = jwt.verify(token, this.secretKey);
+      return jwtDecoded;
     } catch (e) {
       throw new HttpException('Invalid Access Token', HttpStatus.UNAUTHORIZED);
     }

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, ConflictException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { User, Prisma } from '@prisma/client';
 
@@ -8,6 +8,13 @@ export class UserRepository {
 
   async createUser(data: Prisma.UserCreateInput): Promise<User> {
     try {
+      // Check if a user with the provided email already exists
+      const existingUser = await this.findUserByEmail(data.email);
+      if (existingUser) {
+        throw new ConflictException('User with this email already exists');
+      }
+
+      // If user doesn't exist, create the new user
       return await this.prisma.user.create({
         data,
       });

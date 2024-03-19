@@ -1,19 +1,26 @@
 // jwt.strategy.ts
-
 import { Injectable } from '@nestjs/common';
-import { JwtStrategy as JwtBase } from 'passport-jwt';
+import { Strategy as JWTStrategy, ExtractJwt } from 'passport-jwt';
 
 @Injectable()
-export class JwtStrategy extends JwtBase {
+export class JwtStrategy extends JWTStrategy {
   constructor() {
-    super({
-      jwtFromRequest: (req) => req.cookies.jwt, // or from headers, query parameters, etc.
-      ignoreExpiration: false,
-      secretOrKey: process.env.JWT_SECRET,
-    });
-  }
-
-  async validate(payload: any) {
-    return { userId: payload.sub, email: payload.email };
+    super(
+      {
+        jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+        ignoreExpiration: false,
+        secretOrKey: process.env.JWT_SECRET,
+      },
+      async (payload, done) => {
+        // Adicione o segundo argumento para a função de verificação (verify)
+        try {
+          // Validação opcional do payload do JWT
+          const user = { userId: payload.sub, email: payload.email };
+          return done(null, user);
+        } catch (error) {
+          return done(error, false);
+        }
+      },
+    );
   }
 }
