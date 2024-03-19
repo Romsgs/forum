@@ -18,7 +18,7 @@ export class UserRepository {
       return await this.prisma.user.create({
         data,
       });
-    } catch (error) {
+    } catch (error: any) {
       throw new Error(`Could not create user: ${error.message}`);
     }
   }
@@ -26,7 +26,7 @@ export class UserRepository {
   async findAll(): Promise<User[] | null> {
     try {
       return await this.prisma.user.findMany();
-    } catch (error) {
+    } catch (error: any) {
       throw new Error(`Could not find user by email: ${error.message}`);
     }
   }
@@ -36,7 +36,7 @@ export class UserRepository {
       return await this.prisma.user.findUnique({
         where: { email },
       });
-    } catch (error) {
+    } catch (error: any) {
       throw new Error(`Could not find user by email: ${error.message}`);
     }
   }
@@ -46,7 +46,7 @@ export class UserRepository {
       return await this.prisma.user.findUnique({
         where: { id },
       });
-    } catch (error) {
+    } catch (error: any) {
       throw new Error(`Could not find user by ID: ${error.message}`);
     }
   }
@@ -57,7 +57,7 @@ export class UserRepository {
         where: { id },
         data,
       });
-    } catch (error) {
+    } catch (error: any) {
       throw new Error(`Could not update user: ${error.message}`);
     }
   }
@@ -67,7 +67,7 @@ export class UserRepository {
       return await this.prisma.user.delete({
         where: { id },
       });
-    } catch (error) {
+    } catch (error: any) {
       throw new Error(`Could not delete user: ${error.message}`);
     }
   }

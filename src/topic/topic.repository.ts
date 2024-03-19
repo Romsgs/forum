@@ -13,14 +13,14 @@ export class TopicRepository {
       return await this.prisma.topic.create({
         data,
       });
-    } catch (error) {
+    } catch (error: any) {
       throw new Error(`Could not create topic: ${error.message}`);
     }
   }
   async findAllTopics() {
     try {
       return await this.prisma.topic.findMany();
-    } catch (error) {
+    } catch (error: any) {
       throw new Error(`Could not find topics ${error.message}`);
     }
   }
@@ -30,7 +30,7 @@ export class TopicRepository {
       return await this.prisma.topic.findUnique({
         where: { id },
       });
-    } catch (error) {
+    } catch (error: any) {
       throw new Error(`Could not find topic by ID: ${error.message}`);
     }
   }
@@ -41,7 +41,7 @@ export class TopicRepository {
         include: { posts: true }, // Include related posts in the query
       });
       return topicsWithPosts;
-    } catch (error) {
+    } catch (error: any) {
       throw new Error(`Could not find topics by Owner: ${error.message}`);
     }
   }
@@ -52,7 +52,7 @@ export class TopicRepository {
         where: { id },
         data,
       });
-    } catch (error) {
+    } catch (error: any) {
       throw new Error(`Could not update topic: ${error.message}`);
     }
   }
@@ -62,7 +62,7 @@ export class TopicRepository {
       return await this.prisma.topic.delete({
         where: { id },
       });
-    } catch (error) {
+    } catch (error: any) {
       throw new Error(`Could not delete topic: ${error.message}`);
     }
   }

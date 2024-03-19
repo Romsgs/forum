@@ -18,7 +18,7 @@ export class PostRepository {
       return await this.prisma.post.delete({
         where: { id },
       });
-    } catch (error) {
+    } catch (error: any) {
       throw new Error(`Could not delete topic: ${error.message}`);
     }
   }
