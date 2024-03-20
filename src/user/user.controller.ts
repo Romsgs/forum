@@ -1,5 +1,6 @@
 import {
   Body,
+  ConflictException,
   Controller,
   Delete,
   Get,
@@ -19,7 +20,11 @@ export class UserController {
   async addUser(
     @Body() createUserDto: { email: string; password: string; name?: string },
   ): Promise<User> {
-    return this.userService.addUser(createUserDto);
+    try {
+      return this.userService.addUser(createUserDto);
+    } catch (error) {
+      throw new ConflictException(error, 'email already exists');
+    }
   }
 
   @Get()
